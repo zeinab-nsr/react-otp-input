@@ -8,11 +8,12 @@ interface Props {
 export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label }) => {
 
   const goToNextInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(e.target.value.length === inputLength) {
-      const nextInput = e.target.nextElementSibling as HTMLElement;
+    const curruntInput = e.target;
+    if(curruntInput.value.length === inputLength) {
+      const nextInput = curruntInput.nextElementSibling as HTMLElement;
       nextInput?.focus();
-    } else if (e.target.value.length === 0) {
-      const previousInput = e.target.previousElementSibling as HTMLElement;
+    } else if (curruntInput.value.length === 0) {
+      const previousInput = curruntInput.previousElementSibling as HTMLElement;
       previousInput?.focus();
     }
   }
