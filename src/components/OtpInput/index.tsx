@@ -11,6 +11,9 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label }) =>
     if(e.target.value.length === inputLength) {
       const nextInput = e.target.nextElementSibling as HTMLElement;
       nextInput?.focus();
+    } else if (e.target.value.length === 0) {
+      const previousInput = e.target.previousElementSibling as HTMLElement;
+      previousInput?.focus();
     }
   }
 
