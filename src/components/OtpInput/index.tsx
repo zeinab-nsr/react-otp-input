@@ -8,9 +8,9 @@ interface Props {
 }
 export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, separator }) => {
 
-  const goToNextInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const curruntInput = e.target;
-    if(curruntInput.value.length === inputLength) {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement> ) => {
+    const curruntInput = e.currentTarget;
+    if(curruntInput.value.length >= inputLength) {
       const nextInput = curruntInput.nextElementSibling as HTMLElement;
       nextInput?.focus();
     } else if (curruntInput.value.length === 0) {
@@ -28,11 +28,11 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
           type="text" 
           className="otp-input__input" 
           maxLength={inputLength} 
-          size={inputLength} 
-          onChange={goToNextInput}
+          size={inputLength}
+          onKeyUp={handleKeyPress}
         />
         {
-          idx < inputCount - 1 && <div className="otp-input__separator">{separator}</div>
+          //(idx < inputCount - 1) && <div className="otp-input__separator">{separator}</div>
         }
         </>
       ))}
