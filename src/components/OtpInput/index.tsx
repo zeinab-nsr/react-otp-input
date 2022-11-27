@@ -15,10 +15,14 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
     const isNumberOrDigit = e.code.match(/^(Digit)/) || e.code.match(/^(Key)/);
 
     if(curruntInput.value.length >= inputLength && isNumberOrDigit) {
-      const nextInput = !separator ? curruntInput.nextElementSibling as HTMLElement : curruntInput.nextElementSibling?.nextElementSibling  as HTMLElement ;
+      const nextInput = !separator ? 
+      curruntInput.nextElementSibling as HTMLElement : 
+      curruntInput.nextElementSibling?.nextElementSibling  as HTMLElement ;
       nextInput?.focus();
     } else if (curruntInput.value.length === 0 && e.key === 'Backspace') {
-      const previousInput =  !separator ? curruntInput.previousElementSibling as HTMLElement : curruntInput.previousElementSibling?.previousElementSibling  as HTMLElement;
+      const previousInput =  !separator ?
+       curruntInput.previousElementSibling as HTMLElement : 
+       curruntInput.previousElementSibling?.previousElementSibling  as HTMLElement;
       previousInput?.focus();
     }
   }
@@ -32,13 +36,11 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
     }
   }
 
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    const pastedData = e.clipboardData.getData("text/plain");
-    console.log(e);
-  }
-
   return (
     <form className="otp-input__form">
+      {label && <span className="otp-input__label">
+        {label}
+      </span>}
       {[...Array(inputCount)].map((i, idx)=>(
         <React.Fragment key={idx}>
         <input 
@@ -48,7 +50,6 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
           size={inputLength}
           onKeyUp={handleKeyUp}
           onKeyDown={handleKeyDown}
-          onPaste={handlePaste}
         />
         {
           (idx < inputCount - 1) && <div className="otp-input__separator">{separator}</div>

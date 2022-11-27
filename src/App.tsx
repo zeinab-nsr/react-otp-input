@@ -5,7 +5,7 @@ import './App.scss';
 function App() {
   return (
     <div className="container">
-      <OtpInput inputCount={4} inputLength={1} separator="-" isNumeric />
+      <OtpInput label="Enter code:" inputCount={4} inputLength={1} separator="-" isNumeric />
     </div>
   );
 }
