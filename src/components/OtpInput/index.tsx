@@ -27,7 +27,7 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement> ) => {
+  const preventEnterNonNumeric = (e: React.KeyboardEvent<HTMLInputElement> ) => {
     const { key } = e;
     
     if (isNumeric && isNaN(Number(key)) && key !== 'Backspace')
@@ -41,7 +41,7 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
       {label && <span className="otp-input__label">
         {label}
       </span>}
-      {[...Array(inputCount)].map((i, idx)=>(
+      {[...Array(inputCount)].map((_, idx)=>(
         <React.Fragment key={idx}>
         <input 
           type="text" 
@@ -49,7 +49,7 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
           maxLength={inputLength} 
           size={inputLength}
           onKeyUp={handleKeyUp}
-          onKeyDown={handleKeyDown}
+          onKeyDown={preventEnterNonNumeric}
         />
         {
           (idx < inputCount - 1) && <div className="otp-input__separator">{separator}</div>
