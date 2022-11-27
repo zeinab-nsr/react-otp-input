@@ -5,10 +5,17 @@ interface Props {
   inputLength: number,
   label?: string,
   separator?: string,
+  isNumeric?: boolean;
 }
-export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, separator }) => {
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement> ) => {
+export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, separator, isNumeric }) => {
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement> ) => {
+    const { key } = e;
+    if (isNumeric && isNaN(Number(key)))
+    {
+      e.preventDefault();
+    }
     const curruntInput = e.currentTarget;
     if(curruntInput.value.length >= inputLength) {
       const nextInput = curruntInput.nextElementSibling as HTMLElement;
@@ -17,6 +24,11 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
       const previousInput = curruntInput.previousElementSibling as HTMLElement;
       previousInput?.focus();
     }
+  }
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const pastedData = e.clipboardData.getData("text/plain");
+    console.log(e);
   }
 
   return (
@@ -29,7 +41,8 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
           className="otp-input__input" 
           maxLength={inputLength} 
           size={inputLength}
-          onKeyUp={handleKeyPress}
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
         />
         {
           //(idx < inputCount - 1) && <div className="otp-input__separator">{separator}</div>
