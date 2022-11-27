@@ -12,17 +12,20 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
 
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement> ) => {
     const curruntInput = e.currentTarget;
-    if(curruntInput.value.length >= inputLength &&( e.code.match(/^(Digit)/) || e.code.match(/^(Key)/))) {
-      const nextInput = curruntInput.nextElementSibling as HTMLElement;
+    const isNumberOrDigit = e.code.match(/^(Digit)/) || e.code.match(/^(Key)/);
+
+    if(curruntInput.value.length >= inputLength && isNumberOrDigit) {
+      const nextInput = !separator ? curruntInput.nextElementSibling as HTMLElement : curruntInput.nextElementSibling?.nextElementSibling  as HTMLElement ;
       nextInput?.focus();
     } else if (curruntInput.value.length === 0 && e.key === 'Backspace') {
-      const previousInput = curruntInput.previousElementSibling as HTMLElement;
+      const previousInput =  !separator ? curruntInput.previousElementSibling as HTMLElement : curruntInput.previousElementSibling?.previousElementSibling  as HTMLElement;
       previousInput?.focus();
     }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement> ) => {
     const { key } = e;
+    
     if (isNumeric && isNaN(Number(key)) && key !== 'Backspace')
     {
       e.preventDefault();
@@ -48,7 +51,7 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
           onPaste={handlePaste}
         />
         {
-          //(idx < inputCount - 1) && <div className="otp-input__separator">{separator}</div>
+          (idx < inputCount - 1) && <div className="otp-input__separator">{separator}</div>
         }
         </React.Fragment>
       ))}
