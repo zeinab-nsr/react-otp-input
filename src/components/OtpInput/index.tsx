@@ -10,16 +10,16 @@ interface Props {
 
 export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, separator, isNumeric }) => {
 
-  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement> ) => {
-    const curruntInput = e.currentTarget;
-    const isNumberOrDigit = e.code.match(/^(Digit)/) || e.code.match(/^(Key)/);
+  const handleKeyUp = ({ currentTarget, code, key }: React.KeyboardEvent<HTMLInputElement> ) => {
+    const curruntInput = currentTarget;
+    const isNumberOrDigit = code.match(/^(Digit)/) || code.match(/^(Key)/);
 
     if(curruntInput.value.length >= inputLength && isNumberOrDigit) {
       const nextInput = !separator ? 
       curruntInput.nextElementSibling as HTMLElement : 
       curruntInput.nextElementSibling?.nextElementSibling  as HTMLElement ;
       nextInput?.focus();
-    } else if (curruntInput.value.length === 0 && e.key === 'Backspace') {
+    } else if (curruntInput.value.length === 0 && key === 'Backspace') {
       const previousInput =  !separator ?
        curruntInput.previousElementSibling as HTMLElement : 
        curruntInput.previousElementSibling?.previousElementSibling  as HTMLElement;
@@ -29,7 +29,6 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
 
   const preventEnterNonNumeric = (e: React.KeyboardEvent<HTMLInputElement> ) => {
     const { key } = e;
-    
     if (isNumeric && isNaN(Number(key)) && key !== 'Backspace')
     {
       e.preventDefault();
