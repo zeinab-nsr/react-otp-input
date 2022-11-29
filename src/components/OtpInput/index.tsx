@@ -26,14 +26,17 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
   }
   
   const handleKeyUp = ({ currentTarget, key }: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-      
-     if (key === 'Backspace' && currentTarget.value.length === 0) {
-      setActiveInputIndex(index-1)
-     }
-    
+    const inputValue = currentTarget.value;
+    if (key === 'Backspace' && inputValue.length === 0) {
+      setActiveInputIndex(index - 1)
+    }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    const isNumberOrDigit = e.code.match(/^(Digit)/) || e.code.match(/^(Key)/);
+    if(e.currentTarget.value.length >= inputLength && isNumberOrDigit) {
+      setActiveInputIndex(index + 1)
+    }
     if (isNumeric && isNaN(Number(e.key)) && e.key !== 'Backspace')
       {
         e.preventDefault();
@@ -60,7 +63,7 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
           size={inputLength}
           onChange={(e) => handleChange(e, index)}
           onKeyUp={(e) => handleKeyUp(e, index)}
-          onKeyDown={handleKeyDown}
+          onKeyDown={(e) => handleKeyDown(e, index)}
         />
         {
           (index < inputCount - 1) && <div className="otp-input__separator">{separator}</div>
