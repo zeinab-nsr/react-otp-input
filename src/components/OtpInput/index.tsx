@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 interface Props {
   inputCount: number,
@@ -9,49 +9,63 @@ interface Props {
 }
 
 export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, separator, isNumeric }) => {
+  const [otp, setOtp] = useState<string[]>(new Array(inputCount).fill(''));
+  const [activeInputIndex, setActiveInputIndex] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleKeyUp = ({ currentTarget, code, key }: React.KeyboardEvent<HTMLInputElement> ) => {
-    const curruntInput = currentTarget;
-    const isNumberOrDigit = code.match(/^(Digit)/) || code.match(/^(Key)/);
-
-    if(curruntInput.value.length >= inputLength && isNumberOrDigit) {
-      const nextInput = !separator ? 
-      curruntInput.nextElementSibling as HTMLElement : 
-      curruntInput.nextElementSibling?.nextElementSibling  as HTMLElement ;
-      nextInput?.focus();
-    } else if (curruntInput.value.length === 0 && key === 'Backspace') {
-      const previousInput =  !separator ?
-       curruntInput.previousElementSibling as HTMLElement : 
-       curruntInput.previousElementSibling?.previousElementSibling  as HTMLElement;
-      previousInput?.focus();
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const { value } = target;
+    const newOtp = [...otp];
+    
+    newOtp[index] = value;
+    setOtp(newOtp);
+    
+    if (value.length === inputLength) {
+      setActiveInputIndex(index + 1);
     }
   }
-
-  const preventEnterNonNumeric = (e: React.KeyboardEvent<HTMLInputElement> ) => {
-    const { key } = e;
-    if (isNumeric && isNaN(Number(key)) && key !== 'Backspace')
-    {
-      e.preventDefault();
-    }
+  
+  const handleKeyUp = ({ currentTarget, key }: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+      
+     if (key === 'Backspace' && currentTarget.value.length === 0) {
+      console.log(index-1)
+      setActiveInputIndex(index-1)
+     }
+    
   }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isNumeric && isNaN(Number(e.key)) && e.key !== 'Backspace')
+      {
+        e.preventDefault();
+      }
+  }
+
+  useEffect(() => {
+    console.log(activeInputIndex);
+    inputRef.current?.focus();
+  }, [activeInputIndex])
 
   return (
     <form className="otp-input__form">
       {label && <span className="otp-input__label">
         {label}
       </span>}
-      {[...Array(inputCount)].map((_, idx)=>(
-        <React.Fragment key={idx}>
+      {[...Array(inputCount)].map((_, index)=>(
+        <React.Fragment key={index}>
         <input 
           type="text" 
+          ref={index === activeInputIndex ? inputRef : null}
+          value={otp[index]}
           className="otp-input__input" 
           maxLength={inputLength} 
           size={inputLength}
-          onKeyUp={handleKeyUp}
-          onKeyDown={preventEnterNonNumeric}
+          onChange={(e) => handleChange(e, index)}
+          onKeyUp={(e) => handleKeyUp(e, index)}
+          onKeyDown={handleKeyDown}
         />
         {
-          (idx < inputCount - 1) && <div className="otp-input__separator">{separator}</div>
+          (index < inputCount - 1) && <div className="otp-input__separator">{separator}</div>
         }
         </React.Fragment>
       ))}
