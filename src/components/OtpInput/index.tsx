@@ -28,7 +28,6 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
   const handleKeyUp = ({ currentTarget, key }: React.KeyboardEvent<HTMLInputElement>, index: number) => {
       
      if (key === 'Backspace' && currentTarget.value.length === 0) {
-      console.log(index-1)
       setActiveInputIndex(index-1)
      }
     
@@ -42,7 +41,6 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
   }
 
   useEffect(() => {
-    console.log(activeInputIndex);
     inputRef.current?.focus();
   }, [activeInputIndex])
 
