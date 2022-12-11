@@ -1,5 +1,6 @@
 # React OTP input component
 
+A simple, customizable and controlled component built with React.
 ## API
 
 <table>
