@@ -1,7 +1,8 @@
 # React OTP input component
 
 A simple, customizable and controlled component built with React.
-<img src='./src/assets/preview.gif' alt='gif'/>
+
+<img src='./src/assets/preview.gif' alt='gif' width='700' />
 
 ## API
 <table>
