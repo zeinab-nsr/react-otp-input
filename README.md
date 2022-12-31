@@ -2,7 +2,7 @@
 
 A simple, customizable and controlled component built with React.
 ## API
-
+<img src='./src/assets/preview.gif'/>
 <table>
   <tr>
     <th>Name<br/></th>
