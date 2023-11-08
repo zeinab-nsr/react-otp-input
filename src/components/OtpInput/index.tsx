@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 
 interface Props {
-  inputCount: number,
-  inputLength: number,
-  getValue: (value: string) => void;
-  label?: string,
-  separator?: string,
+  inputCount: number;
+  inputLength: number;
+  onSubmit: (value: string) => void;
+  label?: string;
+  separator?: string;
   isNumeric?: boolean;
 }
 
-export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, separator, isNumeric, getValue }) => {
+export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, separator, isNumeric, onSubmit }) => {
   const [otp, setOtp] = useState<string[]>(new Array(inputCount).fill(''));
   const [activeInputIndex, setActiveInputIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -38,7 +38,7 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
     if(e.currentTarget.value.length >= inputLength && isNumberOrDigit) {
       setActiveInputIndex(index + 1)
     }
-    if (isNumeric && isNaN(Number(e.key)) && e.key !== 'Backspace')
+    if (isNumeric && isNaN(Number(e.key)) && e.key !== 'Backspace' && e.key !== 'Enter')
       {
         e.preventDefault();
       }
@@ -46,15 +46,20 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
 
   const getTotalNumber = () => {
     const totalValue = otp.join('');
-    getValue(totalValue);
+    onSubmit(totalValue);
   }
 
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeInputIndex])
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    getTotalNumber(); 
+  };
+
   return (
-    <form className="otp-input__form">
+    <form className="otp-input__form" onSubmit={handleSubmit}>
       <div className="otp-input__wrapper">
         {label && <span className="otp-input__label">
           {label}
@@ -78,7 +83,7 @@ export const OtpInput: React.FC<Props> = ({ inputCount, inputLength, label, sepa
           </React.Fragment>
         ))}
       </div>
-      <input type="button" className="otp-input__button" value="Get total value!" onClick={getTotalNumber} />
+      <input type="submit" className="otp-input__button" value="Get total value!"  />
     </form>
   )
 }
